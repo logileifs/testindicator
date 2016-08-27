@@ -1,0 +1,1 @@
+test: /venv/bin/py.test /home/logi/repos/vizido.cloud/tests/unit/ /home/logi/repos/vizido.cloud/tests/functional/
