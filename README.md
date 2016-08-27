@@ -5,7 +5,7 @@ A test runner and indicator applet for Ubuntu
 pyinotify, filemon
 
 # Installation
-pip install git+https://github.com/logileifs/testindicator.git
+`$ pip install git+https://github.com/logileifs/testindicator.git`
 
 # Usage
-./test_indicator /home/user/path/to/project
+`$ ./test_indicator /home/user/path/to/project`
