@@ -11,4 +11,5 @@ pyinotify, filemon
 create a test.yml file in your working directory
 that includes a bash command to run the tests (see sample file https://github.com/logileifs/testindicator/blob/master/test.yml)
 Then run test_indicator with working directory as argument
+
 `$ ./test_indicator /home/user/path/to/project`
