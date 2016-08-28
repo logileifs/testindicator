@@ -1,5 +1,5 @@
 test: /venv/bin/py.test /home/logi/repos/vizido.cloud/tests/unit/ /home/logi/repos/vizido.cloud/tests/functional/
-excluded_files:
+exclude_files:
   - email_list_test.txt
   - email_list.txt
-excluded_dirs:
+exclude_dirs:

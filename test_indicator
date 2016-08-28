@@ -15,7 +15,7 @@ with open(watch_dir + '/test.yml') as f: data = yaml.load(f)
 
 
 full_cmd = watch_dir + data['test']
-excluded_files = data['excluded_files']
+excluded_files = data['exclude_files']
 
 APPINDICATOR_ID = 'myappindicator'
 indicator = None
@@ -38,10 +38,8 @@ def handle_change(evt):
 	inform('Running tests')
 	indicator.set_icon(os.path.abspath('yellowlight.png'))
 	eprint(evt.maskname + ' detected in ' + evt.pathname)
-	# TODO: run tests
 	eprint('running tests')
 	result = call(full_cmd.split())
-	# TODO: check output
 	eprint('result: %s' % result)
 	if result != 0:
 		eprint('result = 0')
