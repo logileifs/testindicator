@@ -1,5 +1,6 @@
 # testindicator
-A test runner and indicator applet for Ubuntu
+A test runner and indicator applet for Ubuntu  
+![alt tag](https://raw.githubusercontent.com/logileifs/testindicator/master/showcase.gif)
 
 # Requirements
 pyinotify, filemon
