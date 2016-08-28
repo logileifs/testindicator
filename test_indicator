@@ -15,6 +15,7 @@ with open(watch_dir + '/test.yml') as f: data = yaml.load(f)
 
 
 full_cmd = watch_dir + data['test']
+excluded_files = data['excluded_files']
 
 APPINDICATOR_ID = 'myappindicator'
 indicator = None
@@ -30,6 +31,10 @@ def monitor_dir(callback):
 
 
 def handle_change(evt):
+	print('change detected in ' + evt.pathname)
+	file_name = evt.pathname.split('/')[-1]
+	if file_name in excluded_files:
+		return
 	inform('Running tests')
 	indicator.set_icon(os.path.abspath('yellowlight.png'))
 	eprint(evt.maskname + ' detected in ' + evt.pathname)
