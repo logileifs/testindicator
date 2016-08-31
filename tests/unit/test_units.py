@@ -2,7 +2,7 @@ import pytest
 import yaml
 
 import paths
-from main_module import test_indicator as ti
+from indicator import test_indicator as ti
 
 
 def mock_set_icon(icon):
