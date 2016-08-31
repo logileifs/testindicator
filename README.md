@@ -14,8 +14,9 @@ A test runner and indicator applet for Ubuntu
 `$ pip install git+https://github.com/logileifs/testindicator.git`
 
 # Usage
-create a test.yml file in your working directory that includes a bash command to run the tests  
-(see sample file https://github.com/logileifs/testindicator/blob/master/test.yml)  
+Only thing you need to do is create a `test.yml` file in your project root and put in it  
+`test: executable_command` (where `executable_command` is a bash executable command to run your tests  
+For more configuration options or an example see the [sample file](see sample file https://github.com/logileifs/testindicator/blob/master/test.yml)  
 
-Then run test_indicator with working directory as argument:  
+Then run test_indicator with project directory as argument:  
 `$ ./test_indicator /home/user/path/to/project`
