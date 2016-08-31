@@ -1,4 +1,4 @@
-# testindicator
+# Test Indicator
 A test runner and indicator applet for Ubuntu  
 ![alt tag](https://raw.githubusercontent.com/logileifs/testindicator/master/showcase.gif)
 
