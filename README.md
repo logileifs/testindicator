@@ -11,7 +11,8 @@ A test runner and indicator applet for Ubuntu
 `$ sudo pip install pyinotify`  
 `$ pip install git+https://github.com/logileifs/filemon.git`  
 ## Install Test Indicator  
-`$ pip install git+https://github.com/logileifs/testindicator.git`
+`$ wget https://github.com/logileifs/testindicator/raw/master/dist/testindicator.deb`  
+`$ sudo dpkg -i testindicator.deb`
 
 # Usage
 ## Configuration
