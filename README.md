@@ -11,7 +11,8 @@ A test runner and indicator applet for Ubuntu
 `$ sudo pip install pyinotify`  
 `$ pip install git+https://github.com/logileifs/filemon.git`  
 ## Install Test Indicator  
-`$ pip install git+https://github.com/logileifs/testindicator.git`
+`$ wget https://github.com/logileifs/testindicator/raw/master/dist/testindicator.deb`  
+`$ sudo dpkg -i testindicator.deb`
 
 # Usage
 ## Configuration
@@ -20,4 +21,7 @@ Only thing you need to do is create a `test.yml` file in your project root and p
 For more configuration options or an example see the [sample file](https://github.com/logileifs/testindicator/blob/master/test.yml)  
 ## Run
 Then run test_indicator with project directory as argument:  
-`$ ./test_indicator /home/user/path/to/project`
+`$ testindicator /home/user/path/to/project`  
+or just  
+`$ testindicator`  
+it will ask you for the path to the project you are working on
