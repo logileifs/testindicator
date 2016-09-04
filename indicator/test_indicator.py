@@ -26,7 +26,7 @@ category = IndicatorCategory.SYSTEM_SERVICES
 
 def set_watch_directory(directory):
 	global watch_dir
-	watch_dir = directory
+	watch_dir = os.path.abspath(directory)
 
 
 def read_config():
@@ -59,6 +59,7 @@ def run_cmd(cmd):
 
 def handle_change(evt):
 	eprint('change detected in ' + evt.pathname)
+	read_config()
 	file_name = evt.pathname.split('/')[-1]
 	if file_name in excluded_files:
 		return
@@ -105,7 +106,7 @@ def setup_indicator(icon):
 	global indicator
 	indicator = register_indicator(APPINDICATOR_ID, icon, category)
 	indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
-	indicator.set_menu(gtk.Menu())
+	indicator.set_menu(build_menu())
 	set_icon(icon)
 	notify.init(APPINDICATOR_ID)
 
