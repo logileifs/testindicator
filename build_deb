@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+cp -r indicator/ build/usr/share/testindicator/
+cp -r res/ build/usr/share/testindicator/
+cp __main__.py build/usr/share/testindicator/
+cp paths.py build/usr/share/testindicator/
+cp testindicator build/usr/bin
+fakeroot dpkg --build build/ dist/testindicator.deb
