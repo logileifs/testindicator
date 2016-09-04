@@ -14,6 +14,9 @@ A test runner and indicator applet for Ubuntu
 `$ wget https://github.com/logileifs/testindicator/raw/master/dist/testindicator.deb`  
 `$ sudo dpkg -i testindicator.deb`
 
+# Uninstallation
+`$ sudo dpkg -r testindicator`
+
 # Usage
 ## Configuration
 Only thing you need to do is create a `test.yml` file in your project root and put in it  
