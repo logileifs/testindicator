@@ -6,6 +6,7 @@ from gi.repository import Notify as notify
 from gi.repository import Gtk as gtk
 from subprocess import call
 import filemon as fm
+import threading
 import signal
 import paths
 import yaml
@@ -16,7 +17,7 @@ import os
 APPINDICATOR_ID = 'testindicator'
 indicator = None
 full_cmd = None
-excluded_files = None
+exclude_files = None
 notifications = True
 watch_dir = None
 verbose = False
@@ -31,14 +32,14 @@ def set_watch_directory(directory):
 
 def read_config():
 	global full_cmd
-	global excluded_files
+	global exclude_files
 	global notifications
 	global watch_dir
 	global verbose
 	with open(watch_dir + '/test.yml') as f: data = yaml.load(f)
 
 	full_cmd = data['test']
-	excluded_files = data['exclude_files']
+	exclude_files = data['exclude_files']
 	notifications = data.get('notifications', True)
 	verbose = data.get('verbose', False)
 
@@ -54,37 +55,50 @@ def monitor_dir(callback):
 
 
 def run_cmd(cmd):
-	return call(cmd.split())
+	result = None
+	try:
+		result = call(cmd.split())
+	except Exception as e:
+		eprint('exception when running command %s' % full_cmd)
+		eprint(e)
+		inform('Error when running tests')
+	return result
+
+
+def handle_result(result):
+	if result is None:
+		set_icon(paths.YELLOW)
+		inform('Error while running tests')
+	elif result != 0:
+		eprint('result NOT 0')
+		set_icon(paths.RED)
+		inform('Tests failed')
+	else:
+		set_icon(paths.GREEN)
+		inform('Tests passed')
+
+
+def run_tests_in_background():
+	bg_thread = threading.Thread(target=run_tests)
+	bg_thread.start()
+
+
+def run_tests():
+	inform('Running tests')
+	set_icon(paths.YELLOW)
+	eprint('running tests')
+	result = run_cmd(full_cmd)
+	eprint('result: %s' % result)
+	handle_result(result)
 
 
 def handle_change(evt):
 	eprint('change detected in ' + evt.pathname)
 	read_config()
 	file_name = evt.pathname.split('/')[-1]
-	if file_name in excluded_files:
+	if file_name in exclude_files:
 		return
-	inform('Running tests')
-	indicator.set_icon(paths.YELLOW)
-	eprint(evt.maskname + ' detected in ' + evt.pathname)
-	eprint('running tests')
-	result = None
-	try:
-		result = call(full_cmd.split())
-	except Exception as e:
-		eprint('exception when running command %s' % full_cmd)
-		eprint(e)
-		inform('Error when running tests')
-	eprint('result: %s' % result)
-	if result is None:
-		indicator.set_icon(paths.YELLOW)
-		inform('Error while running tests')
-	elif result != 0:
-		eprint('result NOT 0')
-		indicator.set_icon(paths.RED)
-		inform('Tests failed')
-	else:
-		indicator.set_icon(paths.GREEN)
-		inform('Tests passed')
+	run_tests_in_background()
 
 
 def set_icon(new_icon):
@@ -135,10 +149,11 @@ def run(directory):
 	eprint('paths.ROOT_PATH: ' + paths.ROOT_PATH)
 	eprint('watching directory: %s' % watch_dir)
 	eprint('full_cmd: %s' % full_cmd)
-	#eprint('yaml data: %s' % data)
-	#eprint('test command: %s' % data['test'])
 	monitor_dir(handle_change)
-	setup_indicator(paths.GREEN)
+	setup_indicator(paths.YELLOW)
+	#bg_thread = threading.Thread(target=run_tests)
+	#bg_thread.start()
+	run_tests_in_background()
 	run_forever()
 
 if __name__ == "__main__":
