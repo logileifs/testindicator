@@ -4,4 +4,7 @@ exclude_files:
   - email_list.txt
   - lastfailed
 exclude_dirs:
-notifications: false
+  - .git
+  - ignore
+notifications: true
+verbose: true

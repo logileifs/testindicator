@@ -4,6 +4,7 @@ from gi.repository.AppIndicator3 import IndicatorCategory
 from gi.repository import AppIndicator3 as appindicator
 from gi.repository import Notify as notify
 from gi.repository import Gtk as gtk
+from os.path import relpath
 from subprocess import call
 import filemon as fm
 import threading
@@ -18,6 +19,7 @@ APPINDICATOR_ID = 'testindicator'
 indicator = None
 full_cmd = None
 exclude_files = None
+exclude_dirs = None
 notifications = True
 watch_dir = None
 verbose = False
@@ -33,13 +35,15 @@ def set_watch_directory(directory):
 def read_config():
 	global full_cmd
 	global exclude_files
+	global exclude_dirs
 	global notifications
 	global watch_dir
 	global verbose
 	with open(watch_dir + '/test.yml') as f: data = yaml.load(f)
 
 	full_cmd = data['test']
-	exclude_files = data['exclude_files']
+	exclude_files = data.get('exclude_files', [])
+	exclude_dirs = data.get('exclude_dirs', [])
 	notifications = data.get('notifications', True)
 	verbose = data.get('verbose', False)
 
@@ -92,12 +96,29 @@ def run_tests():
 	handle_result(result)
 
 
+def ignore(path):
+	items = relpath(path, watch_dir).split('/')
+	subdirs = items[0:-1]
+	file_name = items[-1]
+	#print('subdir: ' + subdir)
+	for subdir in subdirs:
+		if subdir in exclude_dirs:
+			return True
+	#if subdir in exclude_dirs:
+	#	return True
+	#file_name = path.split('/')[-1]
+	if file_name in exclude_files:
+		return True
+
+
 def handle_change(evt):
 	eprint('change detected in ' + evt.pathname)
 	read_config()
-	file_name = evt.pathname.split('/')[-1]
-	if file_name in exclude_files:
+	if ignore(evt.pathname):
 		return
+	#file_name = evt.pathname.split('/')[-1]
+	#if file_name in exclude_files:
+	#	return
 	run_tests_in_background()
 
 
