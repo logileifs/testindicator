@@ -5,10 +5,6 @@ import paths
 from indicator import test_indicator as ti
 
 
-def mock_set_icon(icon):
-	pass
-
-
 class TestUnits():
 
 	def test_can_set_directory(self):
@@ -28,3 +24,11 @@ class TestUnits():
 		assert ti.icon is not None
 		ti.set_icon(paths.YELLOW)
 		assert ti.icon == paths.YELLOW
+
+	def test_wait_a_few_seconds(self):
+		import time
+		time.sleep(1)
+		assert True
+
+	def test_add_new_test(self):
+		assert True
