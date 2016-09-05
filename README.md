@@ -12,7 +12,8 @@ A test runner and indicator applet for Ubuntu
 `$ pip install git+https://github.com/logileifs/filemon.git`  
 ## Install Test Indicator  
 `$ wget https://github.com/logileifs/testindicator/raw/master/dist/testindicator.deb`  
-`$ sudo dpkg -i testindicator.deb`
+`$ sudo dpkg -i testindicator.deb`  
+or simply open the deb file with Ubuntu Software Center
 
 # Uninstallation
 `$ sudo dpkg -r testindicator`
