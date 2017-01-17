@@ -1,6 +1,9 @@
 # Test Indicator
 A test runner and indicator applet for Ubuntu  
-![alt tag](https://raw.githubusercontent.com/logileifs/testindicator/master/showcase.gif)
+Runs your tests while you write code  
+## Previews
+![alt tag](https://raw.githubusercontent.com/logileifs/testindicator/master/showcase2.gif)  
+![alt tag](https://raw.githubusercontent.com/logileifs/testindicator/master/showcase.gif)  
 
 # Requirements
 [pyinotify](https://github.com/seb-m/pyinotify)  
