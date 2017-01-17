@@ -10,4 +10,4 @@ if [ $# == 0 ]; then
 else
 	watch_dir=$1
 fi
-python /usr/share/testindicator/ "$watch_dir"
+/usr/bin/python /usr/share/testindicator/ "$watch_dir"

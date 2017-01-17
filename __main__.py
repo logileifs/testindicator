@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 from indicator import test_indicator
 import sys
 import os
