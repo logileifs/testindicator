@@ -1,7 +1,10 @@
 #!/usr/bin/python
 from __future__ import print_function
+import gi
+gi.require_version('AppIndicator3', '0.1')
 from gi.repository.AppIndicator3 import IndicatorCategory
 from gi.repository import AppIndicator3 as appindicator
+gi.require_version('Notify', '0.7')
 from gi.repository import Notify as notify
 from gi.repository import Gtk as gtk
 from os.path import relpath
@@ -10,7 +13,11 @@ from subprocess import Popen
 from paths import YELLOW
 from paths import GREEN
 from paths import RED
-import filemon as fm
+
+#import filemon as fm
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
 import threading
 import signal
 #import paths
@@ -31,6 +38,23 @@ verbose = False
 icon = None
 cwd = None
 category = IndicatorCategory.SYSTEM_SERVICES
+observer = None
+
+
+class MyHandler(FileSystemEventHandler):
+	def handle_change(self, evt):
+		read_config()
+		if ignore(evt.src_path):
+			return
+		run_tests_in_background()
+
+	def on_modified(self, event):
+		eprint('change detected in ' + event.src_path)
+		if event.is_directory:
+			# We are getting notified about a directory
+			pass
+		else:
+			self.handle_change(event)
 
 
 def set_watch_directory(directory):
@@ -46,10 +70,18 @@ def read_config():
 	global watch_dir
 	global verbose
 	global cwd
-	with open(watch_dir + '/test.yml') as f: data = yaml.load(f)
+
+	accepted_names = ['/test.yml', '/.test.yml', '/test.yaml', '/.test.yaml']
+	for name in accepted_names:
+		try:
+			f = open(watch_dir + name)
+			data = yaml.load(f)
+			f.close()
+		except: pass
+		else: break
 
 	full_cmd = data['test']
-	cwd = data['cwd']
+	cwd = data.get('cwd', watch_dir)
 	exclude_files = data.get('exclude_files', [])
 	exclude_dirs = data.get('exclude_dirs', [])
 	notifications = data.get('notifications', True)
@@ -62,15 +94,16 @@ def eprint(*args, **kwargs):
 
 
 def monitor_dir(callback):
-	fmon = fm.FileMon(watch_dir, fm.IN_CLOSE_WRITE, callback, True)
-	fmon.start()
+	global observer
+	observer = Observer()
+	observer.schedule(MyHandler(), path=watch_dir, recursive=True)
+	observer.start()
 
 
 def run_cmd(cmd):
 	result = None
 	eprint('running command ' + cmd)
 	try:
-		#result = call(cmd.split())
 		result = Popen(cmd.split(), cwd=cwd).wait()
 	except Exception as e:
 		eprint('exception when running command %s' % full_cmd)
@@ -84,7 +117,6 @@ def handle_result(result):
 		set_icon(YELLOW)
 		inform('Error while running tests')
 	elif result != 0:
-		#eprint('result NOT 0')
 		set_icon(RED)
 		inform('Tests failed')
 	else:
@@ -113,8 +145,16 @@ def ignore(path):
 	for subdir in subdirs:
 		if subdir in exclude_dirs:
 			return True
-	if file_name in exclude_files:
-		return True
+	for file in exclude_files:
+		if file_name == file:
+			eprint('exclude file %s' % file_name)
+			return True
+		start = file.split('.')[0]
+		if start == '*':
+			end = file.split('.')[1]
+			if end == file_name.split('.')[1]:
+				eprint('exclude all %s files' % end)
+				return True
 
 
 def handle_change(evt):
@@ -166,6 +206,8 @@ def build_menu():
 
 
 def quit(source):
+	observer.stop()
+	observer.join()
 	gtk.main_quit()
 
 
