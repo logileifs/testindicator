@@ -1,8 +1,9 @@
-test: /usr/local/bin/pytest /home/logi/repos/testindicator/tests
+test: nosetests /home/logi/repos/testindicator/tests
 exclude_files:
-  - email_list_test.txt
-  - email_list.txt
-  - lastfailed
+  - 'email_list_test.txt'
+  - 'email_list.txt'
+  - 'lastfailed'
+  - '*.pyc'
 exclude_dirs:
   - .git
   - ignore
