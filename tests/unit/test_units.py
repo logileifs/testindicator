@@ -5,7 +5,7 @@ import yaml
 
 from indicator import paths
 from indicator import config as cfg
-from indicator import test_indicator as ti
+from indicator import application as app
 
 
 class TestUnits():

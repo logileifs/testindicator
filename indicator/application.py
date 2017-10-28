@@ -8,14 +8,15 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk as gtk
 from gi.repository import GLib
 
+# zenipy is a wrapper for handy gtk dialogs
+import zenipy
+
 # standard library dependencies
-from os.path import relpath
 from subprocess import Popen
 from subprocess import PIPE
 import threading
 import logging
 import signal
-import yaml
 import sys
 import os
 
@@ -29,9 +30,9 @@ import config as cfg
 
 logging.basicConfig(
 	level=logging.DEBUG,
-	format='%(asctime)s %(name)s:%(threadName)s.%(levelname)s: %(message)s',
+	format='%(asctime)s-%(name)s[%(threadName)s] %(levelname)s: %(message)s',
 )
-log = logging.getLogger('main')
+log = logging.getLogger(__name__)
 
 
 class Application(object):
@@ -109,9 +110,28 @@ class Application(object):
 		gtk.main_quit()
 
 
-if __name__ == "__main__":
-	watch_dir = os.path.abspath(sys.argv[1])
+def main():
+	if len(sys.argv) < 2:
+		watch_dir = zenipy.file_selection(
+			multiple=False,
+			directory=True,
+			save=False,
+			confirm_overwrite=False,
+			filename=None,
+			title='Choose a directory to watch',
+			width=20,
+			height=20,
+			timeout=None
+		)
+	else:
+		watch_dir = os.path.abspath(sys.argv[1])
+	if not watch_dir:
+		raise SystemExit('No watch directory selected - exiting')
 	cfg.set_watch_dir(watch_dir)
 	cfg.read()
 	app = Application()
 	app.run()
+
+
+if __name__ == "__main__":
+	main()
