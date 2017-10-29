@@ -8,10 +8,6 @@ Runs your tests while you write code
 
 # Installation
 ## testindicator is now available as a python package
-Install testindicator for your user  
-`$ pip install --user testindicator`  
-Then add `export PATH=~/.local/bin:$PATH` to your `.bashrc` (linux) or `.bash_profile` (mac)  
-Or you can install it system wide (not recommended)  
 `$ sudo pip install testindicator`  
 
 
