@@ -3,9 +3,9 @@
 
 import yaml
 
-from indicator import paths
-from indicator import config as cfg
-from indicator import application as app
+from testindicator import paths
+from testindicator import config as cfg
+from testindicator import application as app
 
 
 class TestUnits():

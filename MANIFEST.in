@@ -1,0 +1,3 @@
+include LICENSE
+include testindicator/res/*
+include testindicator/data/*

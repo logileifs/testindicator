@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=0.2
+Name=Test Indicator
+GenericName=testindicator
+Comment=Kepp calm and carry on coding
+Exec=/usr/local/bin/testindicator
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=/usr/local/lib/python2.7/dist-packages/testindicator/res/traffic-lights.svg
+Categories=Development;
+StartupNotify=true

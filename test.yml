@@ -1,4 +1,5 @@
-test: nosetests --nocapture /home/logi/repos/testindicator/tests
+test: /home/logi/.virtualenvs/testindicator/bin/nosetests --nocapture /home/logi/repos/testindicator/tests
+cwd: /home/logi/repos/testindicator
 exclude_files:
   - 'email_list_test.txt'
   - 'email_list.txt'
