@@ -10,16 +10,13 @@ Runs your tests while you write code
 [filemon](https://github.com/logileifs/filemon)
 
 # Installation
-## Install the requirements  
-`$ sudo pip install pyinotify`  
-`$ pip install git+https://github.com/logileifs/filemon.git`  
-## Install Test Indicator  
-`$ wget https://github.com/logileifs/testindicator/raw/master/dist/testindicator.deb`  
-`$ sudo dpkg -i testindicator.deb`  
-or simply open the deb file with Ubuntu Software Center
+## testindicator is now available as a python package
+Install testindicator for your user
+`$ pip install --user testindicator`
+Then add `export PATH=~/.local/bin:$PATH` to your `.bashrc` (linux) or `.bash_profile` (mac)
+Or you can install it system wide (not recommended)
+`$ sudo pip install testindicator`
 
-# Uninstallation
-`$ sudo dpkg -r testindicator`
 
 # Usage
 ## Configuration
