@@ -5,17 +5,14 @@ Runs your tests while you write code
 ![alt tag](https://raw.githubusercontent.com/logileifs/testindicator/master/showcase2.gif)  
 ![alt tag](https://raw.githubusercontent.com/logileifs/testindicator/master/showcase.gif)  
 
-# Requirements
-[pyinotify](https://github.com/seb-m/pyinotify)  
-[filemon](https://github.com/logileifs/filemon)
 
 # Installation
 ## testindicator is now available as a python package
-Install testindicator for your user
-`$ pip install --user testindicator`
-Then add `export PATH=~/.local/bin:$PATH` to your `.bashrc` (linux) or `.bash_profile` (mac)
-Or you can install it system wide (not recommended)
-`$ sudo pip install testindicator`
+Install testindicator for your user  
+`$ pip install --user testindicator`  
+Then add `export PATH=~/.local/bin:$PATH` to your `.bashrc` (linux) or `.bash_profile` (mac)  
+Or you can install it system wide (not recommended)  
+`$ sudo pip install testindicator`  
 
 
 # Usage
