@@ -13,43 +13,65 @@ import config as cfg
 
 log = logging.getLogger(__name__)
 
+def is_excluded_subdir(subdirs):
+	for subdir in subdirs:
+		if subdir in cfg.exclude_dirs:
+			return True
+	return False
+
+
+def is_excluded_file(file_name):
+	for file in cfg.exclude_files:
+		log.debug('checking %s' % file)
+		if file_name == file:
+			log.debug('exclude file %s' % file_name)
+			return True
+		start, ext = splitext(file)
+		log.debug('start: %s' % start)
+		if start == '*':
+			log.debug('we have a wildcard')
+			log.debug('ext: %s' % ext)
+			log.debug('ext: %s' % ext)
+			if ext == splitext(file_name)[-1]:
+				log.debug('exclude all %s files' % ext)
+				return True
+
+
+def should_ignore(path):
+	log.debug('should ignore %s ?' % path)
+	items = relpath(path, cfg.watch_dir).split('/')
+	log.debug('items: %s' % items)
+	subdirs = items[0:-1]
+	log.debug('subdirs: %s' % subdirs)
+	if path == cfg.cfg_path:
+		log.debug('CONFIG CHANGED - RELOAD')
+		cfg.read()
+
+	if is_excluded_subdir(subdirs):
+		return True
+
+	file_name = items[-1]
+	log.debug('file_name: %s' % file_name)
+	if is_excluded_file(file_name):
+		return True
+
+	log.debug("don't ignore")
+	return False
+
+
+
 class MyHandler(FileSystemEventHandler):
 
 	def __init__(self, callback):
 		super(MyHandler, self).__init__()
 		self.callback = callback
 
-	def should_ignore(self, path):
-		log.debug('should ignore %s ?' % path)
-		items = relpath(path, cfg.watch_dir).split('/')
-		subdirs = items[0:-1]
-		file_name = items[-1]
-		if path == cfg.cfg_path:
-			log.debug('CONFIG CHANGED - RELOAD')
-			cfg.read()
-		for subdir in subdirs:
-			if subdir in cfg.exclude_dirs:
-				return True
-		for file in cfg.exclude_files:
-			if file_name == file:
-				log.debug('exclude file %s' % file_name)
-				return True
-			start = file.split('.')[0]
-			if start == '*':
-				end = file.split('.')[1]
-				if end == splitext(file_name)[-1]:
-					log.debug('exclude all %s files' % end)
-					return True
-
-		return False
-
-
 	def on_modified(self, event):
 		log.debug('change detected in ' + event.src_path)
 		if event.is_directory:
 			# We are getting notified about a directory
 			return
-		elif not self.should_ignore(event.src_path):
+		elif not should_ignore(event.src_path):
 			self.callback(event)
 
 
