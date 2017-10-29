@@ -3,6 +3,7 @@
 
 import logging
 from os.path import relpath
+from os.path import splitext
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -36,7 +37,7 @@ class MyHandler(FileSystemEventHandler):
 			start = file.split('.')[0]
 			if start == '*':
 				end = file.split('.')[1]
-				if end == file_name.split('.')[1]:
+				if end == splitext(file_name)[-1]:
 					log.debug('exclude all %s files' % end)
 					return True
 

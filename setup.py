@@ -20,7 +20,7 @@ setup(
 	data_files = [
 		('share/applications', ['data/testindicator.desktop']),
 	],
-	version='0.3',
+	version='0.4',
 	description="Don't worry about running tests - just write code",
 	long_description="testindicator is an automatic test runner/monitor. It monitors a directory of your choice and runs your tests as soon as a file is changed",
 	author='Logi Leifsson',
