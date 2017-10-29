@@ -1,20 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# gi repository dependencies
 import gi
+
 gi.require_version('AppIndicator3', '0.1')
 from gi.repository.AppIndicator3 import IndicatorCategory
 from gi.repository.AppIndicator3 import IndicatorStatus
 from gi.repository import AppIndicator3 as appindicator
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk as gtk
 
-import logging
-log = logging.getLogger(__name__)
 
+# standard library dependencies
+import logging
+
+# project imports
 from paths import YELLOW
 from paths import GREEN
 from paths import RED
+
+
+log = logging.getLogger(__name__)
 
 class Indicator(object):
 	"""Indicator class for testindicator"""

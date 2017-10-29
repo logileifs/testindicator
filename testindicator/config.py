@@ -15,11 +15,14 @@ verbose = False
 watch_dir = None
 work_dir = None
 cfg_path = None
+project_name = None
 
 
 def set_watch_dir(directory):
 	global watch_dir
+	global project_name
 	watch_dir = os.path.abspath(directory)
+	project_name = os.path.basename(watch_dir)
 
 
 def read():
@@ -53,7 +56,7 @@ def read():
 
 	if not data:
 		log.critical("couldn't find settings file")
-	#	raise SystemExit
+		raise SystemExit("couldn't find settings file")
 
 	full_cmd = data['test']
 	log.debug('test command: %s' % full_cmd)

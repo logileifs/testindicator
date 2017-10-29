@@ -8,11 +8,12 @@ from gi.repository import Notify as notify
 
 # standard library dependencies
 import logging
+import os
 
 # project imports
-from paths import YELLOW
-from paths import GREEN
-from paths import RED
+from paths import YELLOW_BIG as YELLOW
+from paths import GREEN_BIG as GREEN
+from paths import RED_BIG as RED
 
 import config as cfg
 
@@ -39,9 +40,10 @@ class Notifier(object):
 		
 	def inform(self, msg, icon=None):
 		if cfg.notifications:
+			title = "<b>%s</b>" % cfg.project_name
 			if self.notification is None:
-				self.notification = notify.Notification.new("<b>Test Indicator</b>", msg, icon)
+				self.notification = notify.Notification.new(title, msg, icon)
 			else:
-				self.notification.update("<b>Test Indicator</b>", msg, icon)
+				self.notification.update(title, msg, icon)
 			#notification.set_timeout(2)
 			self.notification.show()
