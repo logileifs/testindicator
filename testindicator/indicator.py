@@ -21,6 +21,8 @@ from paths import YELLOW
 from paths import GREEN
 from paths import RED
 
+import config as cfg
+
 
 log = logging.getLogger(__name__)
 
@@ -36,6 +38,12 @@ class Indicator(object):
 		self.on_quit = quit
 		self.indicator.set_status(IndicatorStatus.ACTIVE)
 		self.menu = gtk.Menu()
+
+		self.project_name = gtk.MenuItem(cfg.project_name)
+		self.project_name.set_sensitive(False)
+		self.project_name.show()
+		self.menu.append(self.project_name)
+
 		self.item_quit = gtk.MenuItem('Quit')
 		self.item_quit.connect('activate', self.on_quit)
 		self.menu.append(self.item_quit)
