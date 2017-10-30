@@ -3,6 +3,7 @@
 
 import yaml
 import os
+import os.path as path
 
 from testindicator import paths
 from testindicator import config as cfg
@@ -17,42 +18,41 @@ class TestUnits():
 		cfg.set_watch_dir('/this/is/a/test')
 		assert cfg.watch_dir == '/this/is/a/test'
 
+
 	def test_greenlight_icon_is_found(self):
 		assert paths.RES_PATH == paths.ROOT_PATH + '/res'
 		assert paths.GREEN == paths.RES_PATH + '/' + paths.GREENLIGHT
 		assert paths.YELLOW == paths.RES_PATH + '/' + paths.YELLOWLIGHT
 		assert paths.RED == paths.RES_PATH + '/' + paths.REDLIGHT
 
-	#def test_can_set_icon(self):
-	#	assert ti.icon is None
-	#	ti.setup_indicator(paths.GREEN)
-	#	assert ti.icon is not None
-	#	ti.set_icon(paths.YELLOW)
-	#	assert ti.icon == paths.YELLOW
 
 	def test_wait_a_few_seconds(self):
 		import time
 		time.sleep(1)
 		assert True
 
-	def test_add_new_test(self):
+
+	def test_assert_true(self):
 		assert True
 
+
 	def test_ignore(self):
-		#handler = MyHandler(None)
-		#print('ROOT_PATH: ' + paths.ROOT_PATH)
-		project_path = os.path.dirname(paths.ROOT_PATH)
-		print('project_path: %s' % project_path)
+		project_path = paths.PROJECT_PATH
 		cfg.set_watch_dir(project_path)
 		cfg.read()
-		ignore = fsmon.should_ignore('/home/logi/repos/testindicator/some.pyc')
+
+		pyc_file = path.join(project_path, 'some.pyc')
+		ignore = fsmon.should_ignore(pyc_file)
 		assert ignore == True
 
-		ignore = fsmon.should_ignore('/home/logi/repos/testindicator/ignore_this_dir/some_file')
+		no_extension = path.join(project_path, 'ignore_this_dir', 'some_file')
+		ignore = fsmon.should_ignore(no_extension)
 		assert ignore == True
 
-		ignore = fsmon.should_ignore('/home/logi/repos/testindicator/ignore.me')
+		ignore_file = path.join(project_path, 'ignore.me')
+		ignore = fsmon.should_ignore(ignore_file)
 		assert ignore == True
 
-		ignore = fsmon.should_ignore('/home/logi/repos/testindicator/dont_ignore.me')
+		not_ignore = path.join(project_path, 'dont_ignore.me')
+		ignore = fsmon.should_ignore(not_ignore)
 		assert ignore == False
