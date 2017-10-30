@@ -6,8 +6,8 @@ import os
 import os.path as path
 
 from testindicator import paths
+from testindicator.application import Application
 from testindicator import config as cfg
-from testindicator import application as app
 from testindicator import fsmonitor as fsmon
 
 
@@ -56,3 +56,19 @@ class TestUnits():
 		not_ignore = path.join(project_path, 'dont_ignore.me')
 		ignore = fsmon.should_ignore(not_ignore)
 		assert ignore == False
+
+
+	def test_run_command(self):
+		project_path = paths.PROJECT_PATH
+		cfg.set_watch_dir(project_path)
+		cfg.read()
+		cfg.full_cmd = 'ls'
+		cfg.work_dir = None
+
+		app = Application()
+		assert app.run_cmd() == 0
+
+		cfg.full_cmd = 'grep'
+		# grep returns 2 when executed without arguments
+		assert app.run_cmd() == 2
+
