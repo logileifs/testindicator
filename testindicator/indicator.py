@@ -44,11 +44,25 @@ class Indicator(object):
 		self.project_name.show()
 		self.menu.append(self.project_name)
 
+		self.show_item = gtk.CheckMenuItem("Notifications")
+		self.show_item.set_active(cfg.notifications)
+		self.show_item.connect("toggled", self.on_notifications_toggle)
+		self.show_item.show()
+		self.menu.append(self.show_item)
+
+		separator_item = gtk.SeparatorMenuItem()
+		separator_item.show()
+		self.menu.append(separator_item)
+
 		self.item_quit = gtk.MenuItem('Quit')
 		self.item_quit.connect('activate', self.on_quit)
 		self.menu.append(self.item_quit)
 		self.menu.show_all()
 		self.indicator.set_menu(self.menu)
+
+
+	def on_notifications_toggle(self, widget, data=None):
+		cfg.notifications = not cfg.notifications
 
 
 	def indicate_success(self):
