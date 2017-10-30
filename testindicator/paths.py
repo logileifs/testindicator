@@ -13,6 +13,7 @@ REDLIGHT_BIG = 'redlight-big.png'
 ###		resource file names		###
 
 ROOT_PATH = abspath(dirname(__file__))
+PROJECT_PATH = dirname(ROOT_PATH)
 RES_PATH = join(ROOT_PATH, 'res')
 GREEN = join(RES_PATH, GREENLIGHT)
 GREEN_BIG = join(RES_PATH, GREENLIGHT_BIG)
