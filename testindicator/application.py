@@ -54,22 +54,26 @@ class Application(object):
 		log.debug('running tests')
 		self.notifier.inform_unkown('Running tests')
 		self.indicator.indicate_unkown()
-		bg_thread = threading.Thread(target=self.run_tests)
+		bg_thread = threading.Thread(
+			target=self.run_tests,
+			args=(cfg.full_cmd, cfg.work_dir)
+		)
 		bg_thread.start()
 
 
-	def run_tests(self):
-		result = self.run_cmd()
+	def run_tests(self, cmd=None, cwd=None):
+		result = self.run_cmd(cmd, cwd)
 		log.debug('result: %s' % result)
 		GLib.idle_add(self.handle_result, result)
 
 
-	def run_cmd(self):
+	def run_cmd(self, cmd=None, cwd=None):
 		result = None
-		cmd = cfg.full_cmd
+		if not cmd:
+			return result
 		log.debug('running command ' + cmd)
 		try:
-			p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE, cwd=cfg.work_dir)
+			p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE, cwd=cwd)
 			stdout, stderr = p.communicate()
 			result = p.returncode
 		except Exception as e:
