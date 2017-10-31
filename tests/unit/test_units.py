@@ -57,7 +57,6 @@ class TestUnits():
 	def test_run_command(self):
 		app = Application()
 		assert app.run_cmd('ls') == 0
-
 		assert app.run_cmd('grep') == 2
 
 

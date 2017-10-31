@@ -7,5 +7,5 @@ exclude_files:
 exclude_dirs:
   - .git
   - ignore_this_dir
-notifications: true
+notifications: false
 verbose: true

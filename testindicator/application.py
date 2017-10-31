@@ -30,7 +30,7 @@ import config as cfg
 
 logging.basicConfig(
 	level=logging.DEBUG,
-	format='%(asctime)s-%(name)s[%(threadName)s] %(levelname)s: %(message)s',
+	format='[%(asctime)s] %(name)s-[%(threadName)s] %(levelname)s: %(message)s',
 )
 log = logging.getLogger(__name__)
 
@@ -42,7 +42,7 @@ class Application(object):
 		signal.signal(signal.SIGINT, signal.SIG_DFL)
 		self.fsmonitor = FSMonitor(self.handle_change)
 		self.notifier = Notifier()
-		self.indicator = Indicator(quit=self.gtk_quit)
+		self.indicator = Indicator(quit=self.gtk_quit, run=self.run_tests_in_background)
 
 
 	def handle_change(self, evt=None):
@@ -54,6 +54,7 @@ class Application(object):
 		log.debug('running tests')
 		self.notifier.inform_unkown('Running tests')
 		self.indicator.indicate_unkown()
+		self.indicator.set_status('running')
 		bg_thread = threading.Thread(
 			target=self.run_tests,
 			args=(cfg.full_cmd, cfg.work_dir)
@@ -84,6 +85,7 @@ class Application(object):
 
 	def handle_result(self, result):
 		log.debug('handle_result %s' % result)
+		self.indicator.set_status('waiting')
 		if result is None:
 			log.debug('indicate unkown status')
 			self.indicator.indicate_unkown()

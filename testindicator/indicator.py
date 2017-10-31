@@ -28,14 +28,16 @@ log = logging.getLogger(__name__)
 
 class Indicator(object):
 	"""Indicator class for testindicator"""
-	def __init__(self, quit):
+	def __init__(self, **kwargs):
 		super(Indicator, self).__init__()
 		self.indicator = appindicator.Indicator.new(
 			'testindicator',
 			YELLOW,
 			IndicatorCategory.APPLICATION_STATUS
 		)
-		self.on_quit = quit
+		self.status = None
+		self.on_quit = kwargs.get('quit')
+		self.on_run = kwargs.get('run')
 		self.indicator.set_status(IndicatorStatus.ACTIVE)
 		self.menu = gtk.Menu()
 
@@ -44,11 +46,21 @@ class Indicator(object):
 		self.project_name.show()
 		self.menu.append(self.project_name)
 
+		separator_item = gtk.SeparatorMenuItem()
+		separator_item.show()
+		self.menu.append(separator_item)
+
 		self.show_item = gtk.CheckMenuItem("Notifications")
 		self.show_item.set_active(cfg.notifications)
-		self.show_item.connect("toggled", self.on_notifications_toggle)
+		self.show_item.connect('toggled', self.on_notifications_toggle)
 		self.show_item.show()
 		self.menu.append(self.show_item)
+
+		self.run_now_item = gtk.MenuItem("Run now")
+		self.run_now_item.connect('activate', self.run_now)
+		self.run_now_item.set_sensitive(False)
+		self.run_now_item.show()
+		self.menu.append(self.run_now_item)
 
 		separator_item = gtk.SeparatorMenuItem()
 		separator_item.show()
@@ -78,3 +90,18 @@ class Indicator(object):
 	def indicate_failure(self):
 		log.debug('failure :(')
 		self.indicator.set_icon(RED)
+
+
+	def run_now(self, gtk_menu_item):
+		log.debug('run now')
+		self.on_run()
+
+
+	def set_status(self, status):
+		log.debug('set_status to: %s' % status)
+		self.status = status
+		if self.status == 'running':
+			log.debug('indicator status: running')
+			self.run_now_item.set_sensitive(False)
+		if self.status == 'waiting':
+			self.run_now_item.set_sensitive(True)
