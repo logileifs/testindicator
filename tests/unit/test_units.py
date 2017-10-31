@@ -5,6 +5,8 @@ import yaml
 import os
 import os.path as path
 
+from nose.tools import nottest as skip
+
 from testindicator import paths
 from testindicator.application import Application
 from testindicator import config as cfg
@@ -24,12 +26,6 @@ class TestUnits():
 		assert paths.GREEN == paths.RES_PATH + '/' + paths.GREENLIGHT
 		assert paths.YELLOW == paths.RES_PATH + '/' + paths.YELLOWLIGHT
 		assert paths.RED == paths.RES_PATH + '/' + paths.REDLIGHT
-
-
-	def test_wait_a_few_seconds(self):
-		import time
-		time.sleep(1)
-		assert True
 
 
 	def test_assert_true(self):
@@ -59,16 +55,18 @@ class TestUnits():
 
 
 	def test_run_command(self):
-		project_path = paths.PROJECT_PATH
-		cfg.set_watch_dir(project_path)
-		cfg.read()
-		cfg.full_cmd = 'ls'
-		cfg.work_dir = None
-
 		app = Application()
-		assert app.run_cmd() == 0
+		assert app.run_cmd('ls') == 0
 
-		cfg.full_cmd = 'grep'
-		# grep returns 2 when executed without arguments
-		assert app.run_cmd() == 2
+		assert app.run_cmd('grep') == 2
 
+
+	def test_run_with_no_command(self):
+		app = Application()
+		assert app.run_cmd() is None
+
+
+	#@skip
+	def test_long_running_command(self):
+		app = Application()
+		assert app.run_cmd('sleep 5') == 0
