@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup
+import os.path as path
+
+with open(path.join('testindicator', 'VERSION')) as version_file:
+	version = version_file.read().strip()
 
 setup(
 	name='testindicator',
@@ -17,10 +21,10 @@ setup(
 			'testindicator = testindicator.application:main',
 		]
 	},
-	data_files = [
+	data_files=[
 		('share/applications', ['data/testindicator.desktop']),
 	],
-	version='0.7',
+	version=version,
 	description="Don't worry about running tests - just write code",
 	long_description="testindicator is an automatic test runner/monitor. It monitors a directory of your choice and runs your tests as soon as a file is changed",
 	author='Logi Leifsson',

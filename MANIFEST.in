@@ -1,3 +1,4 @@
 include LICENSE
+include testindicator/VERSION
 include testindicator/res/*
 include testindicator/data/*
