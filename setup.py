@@ -6,6 +6,9 @@ import os.path as path
 with open(path.join('testindicator', 'VERSION')) as version_file:
 	version = version_file.read().strip()
 
+with open("README.rst", "rb") as f:
+	long_descr = f.read().decode("utf-8")
+
 setup(
 	name='testindicator',
 	packages=['testindicator'],
@@ -26,7 +29,7 @@ setup(
 	],
 	version=version,
 	description="Don't worry about running tests - just write code",
-	long_description="testindicator is an automatic test runner/monitor. It monitors a directory of your choice and runs your tests as soon as a file is changed",
+	long_description=long_descr,
 	author='Logi Leifsson',
 	author_email='logileifs@gmail.com',
 	url='https://github.com/logileifs/testindicator',
