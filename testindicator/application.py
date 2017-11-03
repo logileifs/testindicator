@@ -1,31 +1,30 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 from __future__ import print_function
 
 # gi repository dependencies
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk as gtk
-from gi.repository import GLib
+from gi.repository import GObject
+# from gi.repository import GLib
 
 # zenipy is a wrapper for handy gtk dialogs
 import zenipy
 
 # standard library dependencies
-from subprocess import Popen
-from subprocess import PIPE
-import threading
 import logging
 import signal
 import sys
 import os
 
 # project imports
+from testrunner import TestRunner
 from indicator import Indicator
-from notifier import Notifier
 from fsmonitor import FSMonitor
+from notifier import Notifier
 import config as cfg
-
 
 
 logging.basicConfig(
@@ -42,7 +41,11 @@ class Application(object):
 		signal.signal(signal.SIGINT, signal.SIG_DFL)
 		self.fsmonitor = FSMonitor(self.handle_change)
 		self.notifier = Notifier()
-		self.indicator = Indicator(quit=self.gtk_quit, run=self.run_tests_in_background)
+		self.indicator = Indicator(
+			quit=self.gtk_quit,
+			run=self.run_tests_in_background,
+			stop=self.cancel_test_run)
+		self.bg_thread = None
 
 
 	def handle_change(self, evt=None):
@@ -55,32 +58,16 @@ class Application(object):
 		self.notifier.inform_unkown('Running tests')
 		self.indicator.indicate_unkown()
 		self.indicator.set_status('running')
-		bg_thread = threading.Thread(
-			target=self.run_tests,
+		self.bg_thread = TestRunner(
+			callback=self.handle_result,
 			args=(cfg.full_cmd, cfg.work_dir)
 		)
-		bg_thread.start()
+		self.bg_thread.start()
 
 
-	def run_tests(self, cmd=None, cwd=None):
-		result = self.run_cmd(cmd, cwd)
-		log.debug('result: %s' % result)
-		GLib.idle_add(self.handle_result, result)
-
-
-	def run_cmd(self, cmd=None, cwd=None):
-		result = None
-		if not cmd:
-			return result
-		log.debug('running command ' + cmd)
-		try:
-			p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE, cwd=cwd)
-			stdout, stderr = p.communicate()
-			result = p.returncode
-		except Exception as e:
-			log.debug('exception when running command %s' % cmd)
-			log.debug(e)
-		return result
+	def cancel_test_run(self):
+		log.debug('cancel current test run')
+		self.bg_thread.cancel()
 
 
 	def handle_result(self, result):
@@ -90,6 +77,10 @@ class Application(object):
 			log.debug('indicate unkown status')
 			self.indicator.indicate_unkown()
 			self.notifier.inform_unkown('Error while running tests')
+		elif result == -9:
+			log.debug('testrun was canceled')
+			self.indicator.indicate_unkown()
+			self.notifier.inform_unkown('Test run canceled')
 		elif result != 0:
 			log.debug('indicate failure')
 			self.indicator.indicate_failure()
@@ -106,6 +97,7 @@ class Application(object):
 
 
 	def run(self):
+		GObject.threads_init()
 		self.fsmonitor.start()
 		self.run_tests_in_background()
 		gtk.main()

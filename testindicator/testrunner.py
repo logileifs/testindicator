@@ -17,10 +17,21 @@ log = logging.getLogger(__name__)
 
 class TestRunner(threading.Thread):
 	"""Worker thread to execute tests in background"""
-	def __init__(self, group=None, target=None, callback=None,
-				name=None, args=(), kwargs=None, verbose=None):
-		super(TestRunner, self).__init__(group=group, target=target,
-											name=name, verbose=verbose)
+	def __init__(
+		self,
+		group=None,
+		target=None,
+		callback=None,
+		name=None,
+		args=(),
+		kwargs=None,
+		verbose=None):
+		super(TestRunner, self).__init__(
+			group=group,
+			target=target,
+			name=name,
+			verbose=verbose
+		)
 
 		self.p = None
 		self.args = args

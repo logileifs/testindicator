@@ -26,6 +26,7 @@ import config as cfg
 
 log = logging.getLogger(__name__)
 
+
 class Indicator(object):
 	"""Indicator class for testindicator"""
 	def __init__(self, **kwargs):
@@ -37,7 +38,8 @@ class Indicator(object):
 		)
 		self.status = None
 		self.on_quit = kwargs.get('quit')
-		self.on_run = kwargs.get('run')
+		self.on_run = kwargs.get('run', None)
+		self.on_stop = kwargs.get('stop', None)
 		self.indicator.set_status(IndicatorStatus.ACTIVE)
 		self.menu = gtk.Menu()
 
@@ -57,8 +59,8 @@ class Indicator(object):
 		self.menu.append(self.show_item)
 
 		self.run_now_item = gtk.MenuItem("Run now")
-		self.run_now_item.connect('activate', self.run_now)
-		self.run_now_item.set_sensitive(False)
+		self.run_now_item.connect('activate', self.run_or_stop)
+		self.run_now_item.set_sensitive(True)
 		self.run_now_item.show()
 		self.menu.append(self.run_now_item)
 
@@ -92,9 +94,13 @@ class Indicator(object):
 		self.indicator.set_icon(RED)
 
 
-	def run_now(self, gtk_menu_item):
-		log.debug('run now')
-		self.on_run()
+	def run_or_stop(self, gtk_menu_item):
+		if self.status == 'waiting':
+			log.debug('run now')
+			self.on_run()
+		elif self.status == 'running':
+			log.debug('cancel test run')
+			self.on_stop()
 
 
 	def set_status(self, status):
@@ -102,6 +108,8 @@ class Indicator(object):
 		self.status = status
 		if self.status == 'running':
 			log.debug('indicator status: running')
-			self.run_now_item.set_sensitive(False)
+			self.run_now_item.get_child().set_text('Stop execution')
+			#self.run_now_item.set_sensitive(False)
 		if self.status == 'waiting':
-			self.run_now_item.set_sensitive(True)
+			self.run_now_item.get_child().set_text('Run now')
+			#self.run_now_item.set_sensitive(True)
