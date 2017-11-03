@@ -90,3 +90,7 @@ ENV/
 .ropeproject
 
 ignore/
+
+# Sublime files
+*.sublime-project
+*.sublime-workspace
