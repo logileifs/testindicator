@@ -2,7 +2,6 @@
 A test runner and indicator applet for Ubuntu  
 Runs your tests while you write code  
 ## Previews
-![alt tag](https://raw.githubusercontent.com/logileifs/testindicator/master/showcase3.gif)  
 ![alt tag](https://raw.githubusercontent.com/logileifs/testindicator/master/showcase2.gif)  
 ![alt tag](https://raw.githubusercontent.com/logileifs/testindicator/master/showcase.gif)  
 
