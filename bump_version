@@ -1,0 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+with open('testindicator/VERSION', 'r+') as version_file:
+	version = version_file.read().strip()
+	major, minor = [int(i) for i in version.split('.')]
+	minor += 1
+	new_version = '.'.join([str(major), str(minor)])
+	version_file.seek(0)
+	version_file.write(new_version)
