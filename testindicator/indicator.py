@@ -58,7 +58,7 @@ class Indicator(object):
 		self.show_item.show()
 		self.menu.append(self.show_item)
 
-		self.run_now_item = gtk.MenuItem("Run now")
+		self.run_now_item = gtk.MenuItem('Run tests (CTRL+SUPER+T)')
 		self.run_now_item.connect('activate', self.run_or_stop)
 		self.run_now_item.set_sensitive(True)
 		self.run_now_item.show()
@@ -68,7 +68,7 @@ class Indicator(object):
 		separator_item.show()
 		self.menu.append(separator_item)
 
-		self.item_quit = gtk.MenuItem('Quit')
+		self.item_quit = gtk.MenuItem('Exit (CTRL+SUPER+E)')
 		self.item_quit.connect('activate', self.on_quit)
 		self.menu.append(self.item_quit)
 		self.menu.show_all()
@@ -111,5 +111,5 @@ class Indicator(object):
 			self.run_now_item.get_child().set_text('Stop execution')
 			#self.run_now_item.set_sensitive(False)
 		if self.status == 'waiting':
-			self.run_now_item.get_child().set_text('Run now')
+			self.run_now_item.get_child().set_text('Run tests (CTRL+SUPER+T)')
 			#self.run_now_item.set_sensitive(True)

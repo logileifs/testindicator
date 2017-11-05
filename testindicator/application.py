@@ -8,6 +8,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk as gtk
 from gi.repository import GObject
+from gi.repository import Keybinder
 # from gi.repository import GLib
 
 # zenipy is a wrapper for handy gtk dialogs
@@ -46,6 +47,30 @@ class Application(object):
 			run=self.run_tests_in_background,
 			stop=self.cancel_test_run)
 		self.bg_thread = None
+		self.status = 'waiting'
+		self.setup_hotkeys()
+
+
+	def setup_hotkeys(self):
+		log.debug('setting up hotkeys')
+		Keybinder.init()
+		Keybinder.bind('<Super><Ctrl>T', self.keypress, 'run-request')
+		Keybinder.bind('<Super><Ctrl>E', self.keypress, 'quit-request')
+
+
+	def keypress(self, key, action):
+		log.debug('KEY %s, ACTION %s' % (key, action))
+		if action == 'run-request' and self.status != 'running':
+			log.debug('run tests now')
+			self.run_tests_in_background()
+		if action == 'quit-request':
+			log.debug('quit-request')
+			self.quit()
+
+
+	def set_status(self, status):
+		self.status = status
+		self.indicator.set_status(status)
 
 
 	def handle_change(self, evt=None):
@@ -57,7 +82,7 @@ class Application(object):
 		log.debug('running tests')
 		self.notifier.inform_unkown('Running tests')
 		self.indicator.indicate_unkown()
-		self.indicator.set_status('running')
+		self.set_status('running')
 		self.bg_thread = TestRunner(
 			callback=self.handle_result,
 			args=(cfg.full_cmd, cfg.work_dir)
@@ -72,7 +97,7 @@ class Application(object):
 
 	def handle_result(self, result):
 		log.debug('handle_result %s' % result)
-		self.indicator.set_status('waiting')
+		self.set_status('waiting')
 		if result is None:
 			log.debug('indicate unkown status')
 			self.indicator.indicate_unkown()
