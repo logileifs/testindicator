@@ -27,6 +27,7 @@ setup(
 	data_files=[
 		('share/applications', ['data/testindicator.desktop']),
 	],
+	keywords='test testdriven monitor automatic runner testrunner tdd development',
 	version=version,
 	description="Don't worry about running tests - just write code",
 	long_description=long_descr,
