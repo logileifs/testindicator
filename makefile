@@ -1,6 +1,6 @@
-.PHONY: dist upload bump
+.PHONY: dist upload bump build
 
-dist:
+build:
 	@ python setup.py sdist
 	@ rm -r testindicator.egg-info
 
@@ -9,3 +9,5 @@ upload:
 
 bump:
 	@ ./bump_version
+
+dist: bump build upload
