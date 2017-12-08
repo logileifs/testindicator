@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
+from sys import platform
 
 # gi repository dependencies
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk as gtk
 from gi.repository import GObject
-from gi.repository import Keybinder
+if platform == "linux" or platform == "linux2":
+	from gi.repository import Keybinder
 
 # zenipy is a wrapper for handy gtk dialogs
 import zenipy
@@ -52,9 +54,10 @@ class Application(object):
 
 	def setup_hotkeys(self):
 		log.debug('setting up hotkeys')
-		Keybinder.init()
-		Keybinder.bind('<Super><Ctrl>T', self.keypress, 'run-request')
-		Keybinder.bind('<Super><Ctrl>E', self.keypress, 'quit-request')
+		if platform == "linux" or platform == "linux2":
+			Keybinder.init()
+			Keybinder.bind('<Super><Ctrl>T', self.keypress, 'run-request')
+			Keybinder.bind('<Super><Ctrl>E', self.keypress, 'quit-request')
 
 
 	def keypress(self, key, action):
