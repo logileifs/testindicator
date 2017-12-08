@@ -1,5 +1,5 @@
-test: /home/logi/.virtualenvs/testindicator/bin/nosetests --nocapture /home/logi/repos/testindicator/tests
-cwd: /home/logi/repos/testindicator
+test: ~/.virtualenvs/testindicator/bin/nosetests --nocapture ~/repos/testindicator/tests
+cwd: ~/repos/testindicator
 exclude_files:
   - 'ignore.me'
   - 'lastfailed'
