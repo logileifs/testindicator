@@ -21,7 +21,7 @@ project_name = None
 def set_watch_dir(directory):
 	global watch_dir
 	global project_name
-	watch_dir = os.path.abspath(directory)
+	watch_dir = os.path.abspath(os.path.expanduser(directory))
 	project_name = os.path.basename(watch_dir)
 
 
@@ -52,15 +52,17 @@ def read():
 		except Exception as ex:
 			log.debug('failed')
 			log.debug(ex)
-		else: break
+		else:
+			break
 
 	if not data:
 		log.critical("couldn't find settings file")
 		raise SystemExit("couldn't find settings file")
 
-	full_cmd = data['test']
+	cmd = os.path.expanduser(data.get('test', None))
+	full_cmd = ' '.join([os.path.expanduser(x) for x in cmd.split()])
 	log.debug('test command: %s' % full_cmd)
-	work_dir = data.get('cwd', watch_dir)
+	work_dir = os.path.expanduser(data.get('cwd', watch_dir))
 	log.debug('working directory: %s' % work_dir)
 	exclude_files = data.get('exclude_files', [])
 	log.debug('excluded files: %s' % exclude_files)
