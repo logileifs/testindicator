@@ -9,9 +9,9 @@ from gi.repository import Gtk as gtk
 import logging
 
 # project imports
-from paths import YELLOW_BIG as YELLOW
-from paths import GREEN_BIG as GREEN
-from paths import RED_BIG as RED
+from paths import YELLOW_MAC as YELLOW
+from paths import GREEN_MAC as GREEN
+from paths import RED_MAC as RED
 
 log = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ class Indicator(object):
 		self.indicator = gtk.StatusIcon()
 		self.indicator.set_from_stock(gtk.STOCK_ABOUT)
 		self.indicator.connect('popup-menu', self.on_right_click)
-		#self.indicator.set_tooltip(('Sample tray app'))
+		self.indicator.set_tooltip_text('testindicator')
 
 	def on_right_click(self, icon, event_button, event_time):
 		self.make_menu(event_button, event_time)
@@ -43,8 +43,6 @@ class Indicator(object):
 		quit.connect('activate', gtk.main_quit)
 
 		menu.popup(None, None, None, None, event_button, event_time)
-		#menu.popup(None, None, None,
-		#							event_button, event_time, self.indicator)
 
 	def set_status(self, status):
 		log.debug('set_status to: %s' % status)
