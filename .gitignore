@@ -91,6 +91,9 @@ ENV/
 
 ignore/
 
+# MacOS crap
+.DS_Store
+
 # Sublime files
 *.sublime-project
 *.sublime-workspace
